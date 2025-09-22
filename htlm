@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Egg Hatching Simulator</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="world-selector">
+    <button class="world-btn" id="world1Btn">🌍 World 1</button>
+    <button class="world-btn" id="world2Btn">🔥 World 2</button>
+  </div>
+  <div class="container">
+    <div class="stats">
+      <h2>Coins: <span id="coins">0</span></h2>
+      <h3>Hatch Capacity: <span id="hatchCapacity">1</span></h3>
+      <div id="prestigeInfo">Prestige: 0 | Research Points: 0 | Coin Multiplier: x1.0 | Auto-hatcher: Level 0 | Daily
+        Streak: 0 | Casino Chips: 100</div>
+      <div id="achievementsList">Achievements: 0/14 | Quests: 0/10 | Battle Record: 0W-0L</div>
+      <br>
+      <button id="earnCoins">Click for Coins!</button>
+      <button id="upgradeCapacity">Upgrade Capacity (100 coins)</button>
+      <button onclick="startMiniGame()">🎮 Play Mini-Game!</button>
+      <button onclick="prestige()">🌟 Prestige (1.00B coins)</button>
+      <button onclick="buyAutoHatcher()">🤖 Auto-Hatcher</button>
+      <button onclick="claimDailyReward()">🎁 Daily Reward</button>
+      <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('eggs')">🥚 Eggs</button>
+      <button class="tab-button" onclick="showTab('pets')">🐾 Pets</button>
+      <button class="tab-button" onclick="showTab('shop')">🛒 Shop</button>
+      <button class="tab-button" onclick="showTab('garden')">🌱 Garden</button>
+      <button class="tab-button" onclick="showTab('research')">🔬 Research</button>
+      <button class="tab-button" onclick="showTab('casino')">🎰 Casino</button>
+      <button class="tab-button" onclick="showTab('quests')">🎯 Quests</button>
+    </div>
+
+    <div id="eggs-tab" class="tab-content active">
+      <div class="eggs-container" id="eggsContainer"></div>
+    </div>
+
+    <div id="pets-tab" class="tab-content">
+      <div class="inventory">
+        <h2>Your Pets</h2>
+        <div id="petsInventory"></div>
+      </div>
+    </div>
+
+    <div id="shop-tab" class="tab-content">
+      <div class="shop">
+        <h2>🛒 Power-Up Shop</h2>
+        <div id="shopItems">
+          <div class="shop-item">
+            <h3>Coin Booster</h3>
+            <p>x2 coins for 5 minutes</p>
+            <button onclick="buyShopItem('coinBooster')">Buy (1.00K coins)</button>
+          </div>
+          <div class="shop-item">
+            <h3>Lucky Charm</h3>
+            <p>+10% rare pet chance for 10 minutes</p>
+            <button onclick="buyShopItem('luckyCharm')">Buy (5.00K coins)</button>
+          </div>
+          <div class="shop-item">
+            <h3>Gold Rush</h3>
+            <p>x5 coins for 2 minutes</p>
+            <button onclick="buyShopItem('goldRush')">Buy (10.0K coins)</button>
+          </div>
+          <div class="shop-item">
+            <h3>Time Warp</h3>
+            <p>Instantly hatch all eggs</p>
+            <button onclick="buyShopItem('timeWarp')">Buy (25.0K coins)</button>
+          </div>
+          <div class="shop-item">
+            <h3>Magic Wand</h3>
+            <p>Guarantee next egg is legendary+</p>
+            <button onclick="buyShopItem('magicWand')">Buy (100K coins)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="garden-tab" class="tab-content">
+      <div class="garden">
+        <h2>🌱 Magical Garden</h2>
+        <p>Plant seeds to grow coin trees! Seeds cost 1.00K coins and take 5 minutes to grow.</p>
+        <div class="garden-plots">
+          <div class="plot" onclick="plantSeed(0)">🌱 Plot 1</div>
+          <div class="plot" onclick="plantSeed(1)">🌱 Plot 2</div>
+          <div class="plot" onclick="plantSeed(2)">🌱 Plot 3</div>
+          <div class="plot" onclick="plantSeed(3)">🌱 Plot 4</div>
+          <div class="plot" onclick="plantSeed(4)">🌱 Plot 5</div>
+          <div class="plot" onclick="plantSeed(5)">🌱 Plot 6</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="research-tab" class="tab-content">
+      <div class="research">
+        <h2>🔬 Research Lab</h2>
+        <p>Spend research points to unlock powerful upgrades!</p>
+        <div class="research-tree">
+          <div class="research-item">
+            <h3>Fast Hatching (10 points)</h3>
+            <p>Eggs hatch 50% faster</p>
+            <button onclick="unlockResearch('fastHatch')">Unlock</button>
+          </div>
+          <div class="research-item">
+            <h3>Bonus Coins (15 points)</h3>
+            <p>+25% coin generation</p>
+            <button onclick="unlockResearch('bonusCoins')">Unlock</button>
+          </div>
+          <div class="research-item">
+            <h3>Rarity Boost (20 points)</h3>
+            <p>+5% chance for better pets</p>
+            <button onclick="unlockResearch('rarityBoost')">Unlock</button>
+          </div>
+          <div class="research-item">
+            <h3>Auto Collect (25 points)</h3>
+            <p>Automatically collect idle coins</p>
+            <button onclick="unlockResearch('autoCollect')">Unlock</button>
+          </div>
+          <div class="research-item">
+            <h3>Mega Multiplier (50 points)</h3>
+            <p>x3 pet multipliers</p>
+            <button onclick="unlockResearch('megaMultiplier')">Unlock</button>
+          </div>
+          <div class="research-item">
+            <h3>Quantum Hatch (100 points)</h3>
+            <p>Chance to hatch multiple pets from one egg</p>
+            <button onclick="unlockResearch('quantumHatch')">Unlock</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="casino-tab" class="tab-content">
+      <div class="casino">
+        <h2>🎰 Lucky Casino</h2>
+        <p>Chips: <span id="casinoChips">100</span></p>
+        <div class="casino-games">
+          <div class="casino-game">
+            <h3>Slot Machine</h3>
+            <p>Cost: 50 chips | Various prizes available!</p>
+            <button onclick="spinCasino()">🎰 Spin!</button>
+          </div>
+          <div class="casino-game">
+            <h3>Chip Exchange</h3>
+            <p>Convert 100+ chips to coins (1:100 ratio)</p>
+            <button onclick="convertChipsToCoins()">💰 Convert</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quests-tab" class="tab-content">
+      <div class="quests">
+        <h2>🎯 Quest Board</h2>
+        <div id="questsList">
+          <div class="quest">
+            <h3>Get Started</h3>
+            <p>Hatch your first pet</p>
+            <span class="reward">Reward: 500 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Coin Saver</h3>
+            <p>Save 10,000 coins</p>
+            <span class="reward">Reward: 2000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Pet Collector</h3>
+            <p>Own 20 pets</p>
+            <span class="reward">Reward: 5000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Rare Hunter</h3>
+            <p>Find 5 rare+ pets</p>
+            <span class="reward">Reward: 10000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Evolution Expert</h3>
+            <p>Evolve a pet to level 5</p>
+            <span class="reward">Reward: 15000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Battle Champion</h3>
+            <p>Win 10 pet battles</p>
+            <span class="reward">Reward: 25000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Gardener</h3>
+            <p>Plant 5 seeds in the garden</p>
+            <span class="reward">Reward: 8000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Researcher</h3>
+            <p>Unlock 3 research upgrades</p>
+            <span class="reward">Reward: 20000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Gambler</h3>
+            <p>Win 1000 chips at the casino</p>
+            <span class="reward">Reward: 50000 coins + 5 research points</span>
+          </div>
+          <div class="quest">
+            <h3>Prestige Master</h3>
+            <p>Reach prestige level 3</p>
+            <span class="reward">Reward: 100000 coins + 5 research points</span>
+            <div id="eggTooltip" class="egg-tooltip"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      // Hide all tab contents
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+
+      // Remove active class from all buttons
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+
+</html>
